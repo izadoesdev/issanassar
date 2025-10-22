@@ -11,6 +11,7 @@ import { HiOutlineMail } from "react-icons/hi";
 import {
 	SiBun,
 	SiClickhouse,
+	SiKofi,
 	SiNextdotjs,
 	SiPostgresql,
 	SiReact,
@@ -209,9 +210,25 @@ export function TabContent() {
 						transition={{ delay: 0.3 }}
 					>
 						<h2 className="mb-6 font-semibold text-2xl">Get in Touch</h2>
-						<p className="mb-8 text-lg text-muted-foreground">
+						<p className="mb-4 text-lg text-muted-foreground">
 							Feel free to reach out for collaborations or just a friendly chat.
 						</p>
+						<div className="mb-8">
+							<div className="flex items-center gap-3 rounded border border-border bg-accent/30 px-4 py-3">
+								<SiKofi className="text-xl" />
+								<p className="text-muted-foreground">
+									Like my work?{" "}
+									<a
+										className="text-foreground underline hover:text-foreground/80"
+										href="https://ko-fi.com/izadoesdev"
+										rel="noopener noreferrer"
+										target="_blank"
+									>
+										Support me on Ko-fi
+									</a>
+								</p>
+							</div>
+						</div>
 						<div className="flex flex-wrap gap-4">
 							<Link
 								className="inline-flex items-center gap-2 rounded border border-border px-4 py-2.5 transition-all duration-200 hover:scale-105 hover:bg-accent hover:shadow-md"
