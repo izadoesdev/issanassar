@@ -29,7 +29,7 @@ const projects = [
 		description:
 			"An observability and feature management platform built for developers. It tracks app performance, logs, feature rollouts, and user feedback in real time. Built around Redpanda, ClickHouse, and Bun.",
 		tags: ["Bun", "ElysiaJS", "ClickHouse", "React", "TypeScript"],
-		link: "https://github.com/databuddyhq",
+		link: "https://github.com/databuddy-analytics/Databuddy",
 		demo: "https://databuddy.dev",
 	},
 	{
