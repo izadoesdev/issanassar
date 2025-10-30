@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { TabContent } from "./components/TabContent";
 import { ThemeToggle } from "./components/ThemeToggle";
 
@@ -18,7 +19,9 @@ export default function Home() {
 					<ThemeToggle />
 				</header>
 
-				<TabContent />
+				<Suspense fallback={<div className="pt-12">Loading...</div>}>
+					<TabContent />
+				</Suspense>
 
 				{/* Footer */}
 				<footer className="mt-20 border-border border-t pt-8 text-center text-muted-foreground text-sm">
