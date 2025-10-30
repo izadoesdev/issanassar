@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-type Tab = "portfolio" | "about" | "writing";
+type Tab = "portfolio" | "about" | "map";
 
 type TabNavigationProps = {
 	activeTab: Tab;
@@ -39,17 +39,17 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
 				>
 					About
 				</button>
-				{/* <button
+				<button
 					className={`rounded px-4 py-2 text-sm transition-all ${
-						activeTab === "writing"
+						activeTab === "map"
 							? "bg-foreground text-background"
 							: "text-muted-foreground hover:text-foreground"
 					}`}
-					onClick={() => onTabChange("writing")}
+					onClick={() => onTabChange("map")}
 					type="button"
 				>
-					Writing
-				</button> */}
+					Map
+				</button>
 			</div>
 		</motion.div>
 	);

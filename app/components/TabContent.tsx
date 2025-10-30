@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useQueryState } from "nuqs";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiExternalLink } from "react-icons/fi";
@@ -18,11 +19,56 @@ import {
 	SiTailwindcss,
 	SiTypescript,
 } from "react-icons/si";
+import { countryConfig } from "@/lib/countryConfig";
 import { AgeCounter } from "./AgeCounter";
 import { FloatingNav } from "./FloatingNav";
 import { TabNavigation } from "./TabNavigation";
 
-type Tab = "portfolio" | "about" | "writing";
+const WorldMap = dynamic(
+	() => import("./WorldMap").then((mod) => ({ default: mod.WorldMap })),
+	{ ssr: false }
+);
+
+type Tab = "portfolio" | "about" | "map";
+
+// Country code to name mapping
+const countryNames: Record<string, string> = {
+	PS: "Palestine",
+	JO: "Jordan",
+	AE: "United Arab Emirates",
+	US: "United States",
+	CA: "Canada",
+	JP: "Japan",
+	KR: "South Korea",
+	CN: "China",
+	DE: "Germany",
+	FR: "France",
+	IT: "Italy",
+	ES: "Spain",
+	NL: "Netherlands",
+	BE: "Belgium",
+	CH: "Switzerland",
+	AT: "Austria",
+	SE: "Sweden",
+	UK: "United Kingdom",
+	AU: "Australia",
+	SG: "Singapore",
+	HK: "Hong Kong",
+	KZ: "Kazakhstan",
+	RU: "Russia",
+	GR: "Greece",
+	FI: "Finland",
+	NO: "Norway",
+	DK: "Denmark",
+	IE: "Ireland",
+	PT: "Portugal",
+	GB: "United Kingdom",
+	ID: "Indonesia",
+	MY: "Malaysia",
+	LB: "Lebanon",
+	CY: "Cyprus",
+	TR: "Turkey",
+};
 
 const projects = [
 	{
@@ -34,12 +80,12 @@ const projects = [
 		demo: "https://databuddy.dev",
 	},
 	{
-		title: "ProtoQueue",
+		title: "Keypal",
 		description:
-			"A type-safe job queue built on NATS JetStream and Protocol Buffers. It focuses on reliability, low latency, and developer experience.",
-		tags: ["TypeScript", "NATS", "Protocol Buffers", "Bun"],
-		link: "https://github.com/izadoesdev/protoqueue",
-		demo: "https://protoqueue.dev",
+			"A TypeScript library for secure API key management with cryptographic hashing, expiration, scopes, and pluggable storage",
+		tags: ["TypeScript", "Bun"],
+		link: "https://github.com/izadoesdev/keypal",
+		demo: "https://keypal.dev",
 	},
 	{
 		title: "Zephra",
@@ -69,29 +115,17 @@ const techStack = [
 	{ icon: SiClickhouse, name: "ClickHouse", link: "https://clickhouse.com" },
 ];
 
-const writings = [
-	{
-		title: "Building observability tools developers actually want to use",
-		date: "2024-01-15",
-		excerpt:
-			"Why most observability platforms miss the mark and what we're doing differently with Databuddy.",
-	},
-	{
-		title: "Type-safe job queues: why Protocol Buffers matter",
-		date: "2023-12-20",
-		excerpt:
-			"How combining NATS JetStream with Protocol Buffers creates a better developer experience.",
-	},
-	{
-		title: "The case against unnecessary complexity",
-		date: "2023-11-10",
-		excerpt:
-			"Most software is over-engineered. Here's how to build systems that actually solve problems.",
-	},
-];
-
 export function TabContent() {
-	const [activeTab, setActiveTab] = useState<Tab>("portfolio");
+	const [activeTab, setActiveTab] = useQueryState<Tab>("tab", {
+		defaultValue: "portfolio",
+		parse: (value) => {
+			if (value === "portfolio" || value === "about" || value === "map") {
+				return value;
+			}
+			return "portfolio";
+		},
+		serialize: (value) => value,
+	});
 
 	return (
 		<>
@@ -309,9 +343,16 @@ export function TabContent() {
 								being banned here, made me learn to be resourceful and creative.
 								<br /> <br /> I also learned to be patient and persistent, and
 								to never give up, I'm a big fan of making my own luck, which I
-								blogged about, I'm also an open-source lover, I love the
-								community and the people behind open source, which is why
-								Databuddy is also fully open source
+								blogged about{" "}
+								<Link
+									className="text-foreground underline hover:text-foreground/80"
+									href="https://www.databuddy.cc/blog/what-it-really-felt-like-to-create-my-company"
+								>
+									here
+								</Link>
+								, I'm also an open-source lover, I love the community and the
+								people behind open source, which is why Databuddy is also fully
+								open source
 							</p>
 						</motion.div>
 
@@ -386,37 +427,62 @@ export function TabContent() {
 				</motion.div>
 			)}
 
-			{activeTab === "writing" && (
+			{activeTab === "map" && (
 				<motion.div
 					animate={{ opacity: 1 }}
 					className="pt-12"
 					exit={{ opacity: 0 }}
 					initial={{ opacity: 0 }}
 				>
-					<h2 className="mb-8 font-semibold text-3xl">Writing</h2>
-					<div className="space-y-8">
-						{writings.map((post, index) => (
-							<motion.article
-								animate={{ opacity: 1, y: 0 }}
-								className="rounded border border-border p-6 transition-all duration-200 hover:border-foreground/20 hover:bg-accent/50"
-								initial={{ opacity: 0, y: 20 }}
-								key={post.title}
-								transition={{ delay: index * 0.1 }}
-							>
-								<time className="text-muted-foreground text-sm">
-									{new Date(post.date).toLocaleDateString("en-US", {
-										year: "numeric",
-										month: "long",
-										day: "numeric",
-									})}
-								</time>
-								<h3 className="mt-2 mb-2 font-semibold text-xl">
-									{post.title}
+					<h2 className="mb-8 font-semibold text-3xl">Travel Map</h2>
+
+					<div className="mb-6 space-y-4">
+						{/* Visited Countries */}
+						<div className="rounded-xl border border-border bg-background p-4 shadow-sm">
+							<div className="mb-3 flex items-center gap-2">
+								<div className="h-3 w-3 rounded-full bg-blue-500" />
+								<h3 className="font-semibold text-muted-foreground text-sm uppercase tracking-wider">
+									Visited
 								</h3>
-								<p className="text-muted-foreground">{post.excerpt}</p>
-							</motion.article>
-						))}
+							</div>
+							<div className="flex flex-wrap gap-2">
+								{Object.entries(countryConfig)
+									.filter(([, status]) => status === "visited")
+									.map(([code]) => (
+										<span
+											className="rounded-md bg-muted px-2 py-1 text-xs"
+											key={code}
+										>
+											{countryNames[code] || code}
+										</span>
+									))}
+							</div>
+						</div>
+
+						{/* Want to Visit */}
+						<div className="rounded-xl border border-border bg-background p-4 shadow-sm">
+							<div className="mb-3 flex items-center gap-2">
+								<div className="h-3 w-3 rounded-full bg-purple-500" />
+								<h3 className="font-semibold text-muted-foreground text-sm uppercase tracking-wider">
+									Want to Visit
+								</h3>
+							</div>
+							<div className="flex flex-wrap gap-2">
+								{Object.entries(countryConfig)
+									.filter(([, status]) => status === "want-to-go")
+									.map(([code]) => (
+										<span
+											className="rounded-md bg-muted px-2 py-1 text-xs"
+											key={code}
+										>
+											{countryNames[code] || code}
+										</span>
+									))}
+							</div>
+						</div>
 					</div>
+
+					<WorldMap height="600px" />
 				</motion.div>
 			)}
 		</>
