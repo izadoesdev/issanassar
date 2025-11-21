@@ -423,6 +423,28 @@ export function TabContent() {
 								</p>
 							</div>
 						</motion.div>
+
+						{/* Plagued by */}
+						<motion.div
+							animate={{ opacity: 1, y: 0 }}
+							className="rounded border border-border p-6"
+							initial={{ opacity: 0, y: 20 }}
+							transition={{ delay: 0.5 }}
+						>
+							<h3 className="mb-4 font-semibold text-xl">Plagued by</h3>
+							<div className="space-y-3">
+								<p className="text-muted-foreground">
+									<span className="text-foreground">→</span> Light pollution
+								</p>
+								<p className="text-muted-foreground">
+									<span className="text-foreground">→</span> The brutality of
+									human nature
+								</p>
+								<p className="text-muted-foreground">
+									<span className="text-foreground">→</span> Love.
+								</p>
+							</div>
+						</motion.div>
 					</div>
 				</motion.div>
 			)}
