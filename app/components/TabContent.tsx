@@ -459,7 +459,6 @@ export function TabContent() {
 					<h2 className="mb-8 font-semibold text-3xl">Travel Map</h2>
 
 					<div className="mb-6 space-y-4">
-						{/* Visited Countries */}
 						<div className="rounded-xl border border-border bg-background p-4 shadow-sm">
 							<div className="mb-3 flex items-center gap-2">
 								<div className="h-3 w-3 rounded-full bg-blue-500" />
